@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import Button from "react-bootstrap/Button"
-import Modal from "react-bootstrap/Modal"
-import Form from "react-bootstrap/Form"
-import Table from "react-bootstrap/Table"
+import React, { useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import Form from 'react-bootstrap/Form'
+import Table from 'react-bootstrap/Table'
 const FormSender = (props) => {
     const { infoUser, setInfoUser, select, setSelect } = props
     const [show, setShow] = useState(false)
-    const [info, setInfo] = useState({ name: "", phone: "" })
+    const [info, setInfo] = useState({ name: '', phone: '' })
     // Mảng
     const arrSmall = [1, 4, 7]
     const arrMedium = [2, 5, 8]
@@ -20,11 +20,12 @@ const FormSender = (props) => {
         cloneColor[select].name = info.name
         cloneColor[select].phone = info.phone
         setInfoUser(cloneColor)
-        setInfo({ name: "", phone: "" })
+        setInfo({ name: '', phone: '' })
+        setSelect('')
     }
     const handleChangeColor = (num) => {
         let cloneColor = { ...infoUser }
-        cloneColor[num].colorItem = "warning"
+        cloneColor[num].colorItem = 'warning'
         setSelect(num)
         setInfoUser(cloneColor)
     }
@@ -61,7 +62,7 @@ const FormSender = (props) => {
                             </Form.Group>
                             <Form.Group className='mb-3'>
                                 <Form.Label>
-                                    Vị trí ô <div>{`Bạn đã chọn ô ${select}`}</div>{" "}
+                                    Vị trí ô <div>{`Bạn đã chọn ô ${select}`}</div>{' '}
                                 </Form.Label>
                             </Form.Group>
                             <Table striped bordered hover>

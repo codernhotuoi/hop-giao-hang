@@ -1,28 +1,58 @@
-import React, { useEffect, useState } from "react"
-import { Form } from "react-bootstrap-v5"
-import Button from "react-bootstrap/Button"
-import Modal from "react-bootstrap/Modal"
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import React, { useEffect, useState } from 'react'
+import { Form } from 'react-bootstrap-v5'
+import Button from 'react-bootstrap/Button'
+import Modal from 'react-bootstrap/Modal'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 const FormReceiver = (props) => {
-    const { infoUser } = props
+    const { infoUser, setInfoUser } = props
     const [show, setShow] = useState(false)
-    const [infoReceiver, setInfoReceiver] = useState({ name: "", phone: "" })
-    const [counter, setCounter] = useState(61)
+    const [infoReceiver, setInfoReceiver] = useState({ name: '', phone: '' })
+    const [counter, setCounter] = useState(60)
     const [isCoutdown, setIsCoutdown] = useState(false)
     const [isShowInfo, setIsShowInfo] = useState(false)
-    const [colorBtn, setColorBtn] = useState("primary")
-    const [selectBox, setBox] = useState("")
+    const [colorBtn, setColorBtn] = useState('primary')
+    const [selectBox, setBox] = useState('')
+
     useEffect(() => {
-        if (isCoutdown) counter > 0 && setTimeout(() => setCounter(counter - 1), 1000)
-    }, [counter, isCoutdown])
+        let timeout = null
+        if (isCoutdown > 0 && counter) {
+            timeout = setTimeout(() => {
+                console.log(counter)
+                setCounter(counter - 1)
+            }, 1000)
+        }
+        if (timeout !== null) {
+            return () => clearTimeout(timeout)
+        }
+    }, [isCoutdown, counter])
 
-    const handleClose = () => setShow(false)
+    const handleClose = () => {
+        setShow(false)
+    }
     const handleShow = () => setShow(true)
-
+    const handleReceiv = () => {
+        setShow(false)
+        toast.success('Nhận hàng thành công !', {
+            position: toast.POSITION.TOP_RIGHT,
+        })
+        setInfoReceiver({ name: '', phone: '' })
+        setIsShowInfo(false)
+        setBox('')
+        setIsCoutdown(false)
+        setCounter(5)
+        if (selectBox !== '') {
+            let cloneColor = { ...infoUser }
+            cloneColor[selectBox].name = ''
+            cloneColor[selectBox].phone = ''
+            cloneColor[selectBox].colorItem = 'success'
+            setInfoUser(cloneColor)
+        }
+    }
+    console.log(infoUser)
     const handleCoutdown = () => {
         setIsCoutdown(true)
-        setColorBtn("secondary")
+        setColorBtn('secondary')
     }
     const handleSubmit = () => {
         for (const item in infoUser) {
@@ -32,12 +62,6 @@ const FormReceiver = (props) => {
                 setBox(item)
             }
         }
-    }
-    const notify = () => {
-        toast.success("Nhận hàng thành công !", {
-            position: toast.POSITION.TOP_RIGHT,
-        })
-        // setShow(false)
     }
     return (
         <div>
@@ -64,7 +88,7 @@ const FormReceiver = (props) => {
                                         }
                                     />
                                     <Button variant={colorBtn} onClick={() => handleCoutdown()}>
-                                        {isCoutdown ? <p>{counter}</p> : "OTP"}
+                                        {isCoutdown ? <p>{counter}</p> : 'OTP'}
                                     </Button>
                                 </div>
                             </Form.Group>
@@ -83,25 +107,13 @@ const FormReceiver = (props) => {
                                 <p>Đơn hàng của bạn ở hộp: {selectBox}</p>
                             </div>
                         ) : (
-                            ""
+                            ''
                         )}
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant='primary' onClick={notify}>
+                        <Button variant='primary' onClick={() => handleReceiv()}>
                             Nhận hàng
                         </Button>
-                        <ToastContainer
-                            position='top-right'
-                            autoClose={5000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme='light'
-                        />
                     </Modal.Footer>
                 </Modal>
             </>
